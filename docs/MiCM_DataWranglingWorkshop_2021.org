@@ -1,0 +1,184 @@
+#+title: Data Wrangling Workshop
+#+subtitle: [[https://www.mcgill.ca/micm/][McGill initiative in Computational Medicine]]
+#+author: [[https://seannesdoly.github.io/][Sean Nesdoly]]
+#+date: 2021-04-15
+#+include: ~/org/template.org
+#+options: H:3 num:3
+
+#+latex: % format header
+#+latex: \pagestyle{fancy}
+#+latex: \rhead{Sean Nesdoly}
+#+latex: \lhead{\href{https://www.mcgill.ca/micm/}{\includegraphics[width=3cm]{../img/MiCM_branding_img.png}}}
+
+#+attr_latex: :width 2.5cm :placement [H] center
+#+label: fig:MiCM_branding
+[[file:~/bbme/MiCM_Workshop_2021/img/MiCM_branding_img_NoText.png]]
+
+\tableofcontents
+\newpage
+
+* Introduction
+This workshop will introduce the fundamental principles behind data wrangling as
+well as present some of the best practices for implementing these concepts in
+both the [[https://www.r-project.org/][R]] and [[https://julialang.org/][Julia]] programming languages. Specifically, it will cover: (1)
+exploration of raw data from the genomics domain; (2) identification of
+applicable data structures specific to the task at hand; (3) `wrangling' or
+`munging' of data into the selected data structure using the R ~tidyverse~
+packages; (4) cleaning the structured data, as needed; and, (5) transforming the
+`wrangled' data into a format suitable for downstream analyses or archival
+storage, with reusability in mind. An alternative formulation of basic data
+wrangling techniques will also be presented in Julia, demonstrating that these
+concepts are generalizable between programming languages.
+
+** Main Objectives
+1. To understand the fundamental principles behind data wrangling, cleaning, &
+   munging.
+2. To become proficient with data manipulation in R using the ~tidyverse~
+   packages.
+3. Familiarize yourself with Julia, a general purpose, high performance, open
+   source programming language for computational medicine and beyond.
+
+** Instructor Biography
+#+latex: \begin{multicols}{2}
+#+attr_latex: :height 4cm :placement [H]
+#+label: fig:SeanNesdoly
+[[file:~/Pictures/sean_nesdoly.jpg]]
+
+I'm Sean, a passionate programmer with a love for biology. I recently graduated
+from the Biological & Biomedical Engineering program at McGill University with
+an M.Eng. degree that focused on bioinformatic algorithm development; my
+undergraduate training was in Computer Science. I am originally from Calgary,
+Alberta. Outside of work, I enjoy hiking, cycling, hockey, and cooking new
+dishes (attempting to, at least). I am always excited to learn new things, and
+to teach!
+#+latex: \end{multicols}
+
+** Pre-Workshop Survey Questions                                  :noexport:
+1. How familiar are you with the general concepts of programming (e.g.
+   variables, control flow (if, for, while), functions, data structures,
+   algorithms)?
+   - [1, 2, 3, 4, 5]
+2. How familiar are you with the R programming language?
+   - [1, 2, 3, 4, 5]
+3. How familiar are you with shell (command-line) languages (e.g. bash)?
+   - [1, 2, 3, 4, 5]
+4. Do you have prior experience working with data within the framework and
+   constraints of a programming language (not spreadsheets)?
+   - [Yes, No]
+5. Have you heard of the Julia programming language?
+   - [Yes, No]
+6. Would you like an introduction to the Julia programming language?
+   - [Yes, No]
+7. General comments, questions, feedback.
+   - Text field.
+
+* Prerequisites
+Complete the following before attending the workshop:
+1. Install R (version 3.5+): https://utstat.toronto.edu/cran/
+2. Install RStudio Desktop (the free version): https://rstudio.com/products/rstudio/download/
+3. Install all R packages contained within the ~tidyverse~; to do so, execute
+   the following lines in R:
+    #+begin_src R
+      install.packages("tidyverse")
+      library(tidyverse)
+    #+end_src
+4. Install Julia: https://julialang.org/downloads/
+5. Clone or download the following git repository from GitHub:
+   https://github.com/SeanNesdoly/MiCM-Data-Wrangling-Workshop
+   - To *clone* the repository, execute the below code from a terminal. When git
+     prompts for your password, enter your GitHub personal access token (see
+     [[https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token][here]] for details).
+    #+begin_src sh
+      # Replace the below file path with your own
+      cd ~/path/to/working/directory/
+      git clone https://github.com/SeanNesdoly/MiCM-Data-Wrangling-Workshop.git
+    #+end_src
+   - To *download* the repository, look for the green button labelled `Code' and
+     click on `Download ZIP'. Once it downloads, extract the ZIP file to your
+     desired location.
+
+** TODO Alternative: Docker?
+
+* TODO Introduction to Data Wrangling
+Also known as ‘munging’.
+* TODO Exploring Raw Data
+* TODO Data Wrangling with the R ~tidyverse~ Packages
+- Compute Canada Advanced Training @ Queen's (~/qbmcoh/cac/)
+- /Users/sean/qbmcoh/duanlab/patient-classification/R
+- /Users/sean/qbmcoh/duanlab/rproject-template
+- /Users/sean/Documents/r-notes
+
+** Data Manipulation with ~dplyr~
+#+BEGIN_SRC
+mutate()
+select()
+filter()
+summarise()
+arrange()
+#+END_SRC
+
+** Piping with ~magrittr~
+#+BEGIN_SRC
+f(x)
+x %>% f
+#+END_SRC
+
+** The ~tibble~ Data Frame
+- Date Frames: `They do less and complain more'
+- Enhanced print method for large datasets
+- Keeps data in its raw format
+
+#+BEGIN_SRC
+tibble(x = 1:5, y = 2, z = x^2 + y)
+#+END_SRC
+
+** Functional Programming with ~purrr~
+#+BEGIN_SRC
+map()
+#+END_SRC
+
+* TODO Cleaning Structured Data
+* TODO Choosing a Data Structure
+* TODO Preparing Data for Downstream Analyses
+* TODO Introduction to Julia
+- The ability to add explicit type annotations into code improves human
+  readability and catches errors upfront, both of which are issues in R.
+  * For example, ‘function foo(num::Int)::String’ defines a function ‘foo’ that
+    takes an integer ‘num’ and returns a string.
+
+* TODO Practical Assignment
+Within the genomics/omics domain. Ideas:
+- Genome in a Bottle (https://www.nist.gov/programs-projects/genome-bottle)
+- The Cancer Genome Atlas (https://portal.gdc.cancer.gov/)
+- Case vs. control datasets, with patient phenotypes; often very messy, so would
+  be a good candidate for ‘wrangling’ & cleaning.
+- Microbiome analysis (contains taxonomy assignments, sample metadata, etc.)
+
+* Resources
+** General
+- https://en.wikipedia.org/wiki/Data_wrangling
+- OOP vs. multiple dispatch: methods are owned by functions and not by objects
+
+** R
+- https://r4ds.had.co.nz/tidy-data.html
+- https://en.wikipedia.org/wiki/R_(programming_language)
+- https://r-pkgs.org/
+- http://adv-r.had.co.nz/Introduction.html
+- https://github.com/GreenwoodLab/knitr-tutorial
+- https://swcarpentry.github.io/r-novice-inflammation/15-supp-loops-in-depth/
+
+** Docker
+- https://www.rocker-project.org/
+- https://environments.rstudio.com/docker
+- For code: ~RUN git clone gitURLorSSH~
+
+** Polling Software
+- TurningPoint: https://www.mcgill.ca/polling/
+
+** Common Errors
+*** XQuartz on macOS
+Some R packages require XQuartz to be installed. If you run into this error,
+download & install a stable version of [[https://www.xquartz.org/][XQuartz]] and restart your computer.
+Alternatively, if you use [[https://brew.sh/][Homebrew]] as your package manager, you can run the
+following from a terminal:
+: brew install --cask xquartz
