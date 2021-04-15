@@ -3,39 +3,66 @@
 #+author: [[https://seannesdoly.github.io/][Sean Nesdoly]]
 #+date: 2021-04-15
 #+include: ~/org/template.org
-#+options: H:3 num:3
+#+options: H:3 num:2
 
 #+latex: % format header
 #+latex: \pagestyle{fancy}
 #+latex: \rhead{Sean Nesdoly}
-#+latex: \lhead{\href{https://www.mcgill.ca/micm/}{\includegraphics[width=3cm]{../img/MiCM_branding_img.png}}}
+#+latex: \lhead{\href{https://www.mcgill.ca/micm/}{\includegraphics[width=3cm]{../figs/MiCM_branding_img.png}}}
 
 #+attr_latex: :width 2.5cm :placement [H] center
 #+label: fig:MiCM_branding
-[[file:~/bbme/MiCM_Workshop_2021/img/MiCM_branding_img_NoText.png]]
+[[file:~/bbme/MiCM_DataWranglingWorkshop_2021/figs/MiCM_branding_img_NoText.png]]
 
 \tableofcontents
+
+-----
+
+This work is under a *Creative Commons license*. You are free:
+
+1. To Share---to copy, distribute and transmit the work;
+2. To Remix---to adapt the work,
+
+Under the following conditions:
+
+- Attribution---You must attribute the work in the manner specified by the
+  author or licensor (but not in any way that suggests that they endorse you or
+  your use of the work).
+- Share Alike---If you alter, transform, or build upon this work, you may
+  distribute the resulting work only under the same or similar license to this
+  one.
+- For any reuse or distribution, you must make clear to others the license terms
+  of this work.
+
 \newpage
+
+#+LATEX_HEADER: \setcounter{section}{-1}
+#+LATEX_HEADER: \usepackage{titlesec}
+#+LATEX: \titleformat{\section}[hang]{\normalfont\bfseries\huge}{\thesection}{1em}{}
+#+LATEX: \titleformat{\subsection}[hang]{\normalfont\bfseries\LARGE}{\thesubsection}{1em}{}
+#+LATEX: \titleformat{\subsubsection}[hang]{\normalfont\bfseries\Large}{\thesubsubsection}{1em}{}
+#+LATEX: \titleformat{\paragraph}[display]{\normalfont\bfseries\large}{}{1em}{}
 
 * Introduction
 This workshop will introduce the fundamental principles behind data wrangling as
 well as present some of the best practices for implementing these concepts in
 both the [[https://www.r-project.org/][R]] and [[https://julialang.org/][Julia]] programming languages. Specifically, it will cover: (1)
 exploration of raw data from the genomics domain; (2) identification of
-applicable data structures specific to the task at hand; (3) `wrangling' or
-`munging' of data into the selected data structure using the R ~tidyverse~
-packages; (4) cleaning the structured data, as needed; and, (5) transforming the
+applicable data structures specific to the task at hand; (3) the manipulation or
+`wrangling' of data into a desired structure using the R ~tidyverse~ packages;
+(4) cleaning the structured data, as needed; and, (5) transforming the
 `wrangled' data into a format suitable for downstream analyses or archival
 storage, with reusability in mind. An alternative formulation of basic data
 wrangling techniques will also be presented in Julia, demonstrating that these
 concepts are generalizable between programming languages.
 
 ** Main Objectives
-1. To understand the fundamental principles behind data wrangling, cleaning, &
-   munging.
-2. To become proficient with data manipulation in R using the ~tidyverse~
+1. To understand the fundamental principles behind data wrangling, from
+   ingestion of raw data to its final form as a well-structured, annotated, and
+   clean dataset.
+2. To become proficient with data manipulation in *R* using the ~tidyverse~
    packages.
-3. Familiarize yourself with Julia, a general purpose, high performance, open
+3. Familiarize yourself with *Julia*, a general-purpose, high performance, open
    source programming language for computational medicine and beyond.
 
 ** Instructor Biography
@@ -53,6 +80,7 @@ dishes (attempting to, at least). I am always excited to learn new things, and
 to teach!
 #+latex: \end{multicols}
 
+\clearpage
 ** Pre-Workshop Survey Questions                                  :noexport:
 1. How familiar are you with the general concepts of programming (e.g.
    variables, control flow (if, for, while), functions, data structures,
@@ -72,9 +100,44 @@ to teach!
 7. General comments, questions, feedback.
    - Text field.
 
-* Prerequisites
+* Workshop Prerequisites & Setup
+** Obtain Workshop Materials
+Clone or download the following ~git~ repository from GitHub:
+
+https://github.com/SeanNesdoly/MiCM-Data-Wrangling-Workshop
+
+*** Option 1: Download Repository
+To *download* the repository, look for the green button labelled `Code' and
+click on `Download ZIP'. Once it downloads, extract the ZIP file to your desired
+location.
+
+*** Option 2: Clone Repository
+To *clone* the repository, execute the below code from a terminal. When ~git~
+prompts you for your password, enter your GitHub personal access token (see [[https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token][here]]
+for details).
+
+#+begin_src sh
+  # Replace the file path below with your own location!
+  cd ~/path/to/working/directory/
+  git clone https://github.com/SeanNesdoly/MiCM-Data-Wrangling-Workshop.git
+#+end_src
+
+\newpage
+** Overview of Workshop Materials
+1. Presentation material.
+2. Material within the GitHub repository, listed by folder:
+   - ~docs~: Workshop PDF handout, containing hands-on lecture material with
+     inline code.
+   - ~src~: R and Julia source code.
+   - ~data~: Input datasets used by the code in ~src~.
+   - ~out~: Output data; generated by executing the code in ~src~ on the input
+     data in ~data~.
+
+\newpage
+** Software Installation
 Complete the following before attending the workshop:
-1. Install R (version 3.5+): https://utstat.toronto.edu/cran/
+
+1. Install R (version 3.5+; I'm using 4.0.4): https://utstat.toronto.edu/cran/
 2. Install RStudio Desktop (the free version): https://rstudio.com/products/rstudio/download/
 3. Install all R packages contained within the ~tidyverse~; to do so, execute
    the following lines in R:
@@ -82,97 +145,435 @@ Complete the following before attending the workshop:
       install.packages("tidyverse")
       library(tidyverse)
     #+end_src
-4. Install Julia: https://julialang.org/downloads/
-5. Clone or download the following git repository from GitHub:
-   https://github.com/SeanNesdoly/MiCM-Data-Wrangling-Workshop
-   - To *clone* the repository, execute the below code from a terminal. When git
-     prompts for your password, enter your GitHub personal access token (see
-     [[https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token][here]] for details).
-    #+begin_src sh
-      # Replace the below file path with your own
-      cd ~/path/to/working/directory/
-      git clone https://github.com/SeanNesdoly/MiCM-Data-Wrangling-Workshop.git
-    #+end_src
-   - To *download* the repository, look for the green button labelled `Code' and
-     click on `Download ZIP'. Once it downloads, extract the ZIP file to your
-     desired location.
+4. Install Julia (version 1.6.0): https://julialang.org/downloads/
 
-** TODO Alternative: Docker?
+\clearpage
+* Basic Principles of Data Wrangling
+** Exploring Raw Data
+- This step is critical prior to conducting downstream data wrangling &
+  analysis. Spending time here can reduce future headaches.
+- Given the structure of the raw data, define a schema for what you want the
+  output to look like.
+  * What figures do you want to create?
+  * What datasets do you need to generate the final output?
 
-* TODO Introduction to Data Wrangling
-Also known as ‘munging’.
-* TODO Exploring Raw Data
-* TODO Data Wrangling with the R ~tidyverse~ Packages
-- Compute Canada Advanced Training @ Queen's (~/qbmcoh/cac/)
-- /Users/sean/qbmcoh/duanlab/patient-classification/R
-- /Users/sean/qbmcoh/duanlab/rproject-template
-- /Users/sean/Documents/r-notes
+*** Viewing Large Datasets
+- ~head~ & ~tail~
+  * Output the first 100 lines: ~head -n 100 in.txt~
+- ~more~ & ~less~
+- ~wc~ -- word, line, character, and byte count
+  * Count the number of lines:
+    : wc -l file
+  * Count the number of words:
+    : wc -w file
+  * Count the number of characters (bytes):
+    : wc -c file
 
-** Data Manipulation with ~dplyr~
-#+BEGIN_SRC
-mutate()
-select()
-filter()
-summarise()
-arrange()
-#+END_SRC
+*** File Pattern Search Utility: ~grep~
+- Search for an exact string:
+  : grep search_string path/to/file
+
+- Case-insensitive search:
+  : grep -i search_string path/to/file
+
+- Search recursively (ignoring non-text files) in current directory for an exact
+  string:
+  : grep -RI search_string .
+
+- Print file name with the corresponding line number for each match:
+  : grep -Hn search_string path/to/file
+
+\newpage
+*** Verification of Data Integrity
+- Compute a cryptographic hash for your downloaded dataset to produce a `message
+  digest'; you can then compare this to the hash given by the provider of the
+  data to ensure integrity.
+- Secure Hash Algorithm 2 (SHA-2) family of cryptographic hash functions.
+  * e.g. ~sha256sum~, ~sha512sum~
+  * The number corresponds to how many bits are in the message digest.
+- For example: the ~COXPRESdb~ gene coexpression database provides ~md5~ message
+  digests to verify dataset integrity
+  * Navigate to https://coxpresdb.jp/download/ and look for ~md5~.
+
+\newpage
+** Guidelines for Creating Reproducible Data Wrangling Projects
+*** Raw Datasets
+- Raw (input) datasets should be *unmodified* throughout the entire analysis.
+  * This ensures that others can reproduce your results given only the raw data.
+  * However, in doing so, it is important to document the software environment,
+    tools, and packages that you use in your analysis to guard against potential
+    changes that break your toolset (e.g. updates to R or its packages).
+  * If desired, you can remove *write* permissions for your raw datasets to
+    prevent unwanted changes.
+      #+begin_src sh
+      chmod a-w ~/path/to/file
+      #+end_src
+
+*** Project Template
+#+caption: Template for reproducible data wrangling projects.
+#+attr_latex: :placement [H] :width 0.5\textwidth
+#+label: fig:ProjectTemplate
+[[file:~/bbme/MiCM_DataWranglingWorkshop_2021/figs/ProjectTemplate.png]]
+
+*** Appending Timestamps to Your Output
+#+begin_src R
+  time <- function() {
+      gsub('-', '', Sys.time()) %>% gsub('\\s+', '-', .) %>% gsub(':', '', .)
+  }
+
+  time() # append to output filenames, plots
+#+end_src
+
+\clearpage
+* Fundamentals of Data Wrangling in R using the ~tidyverse~
+** The ~tidyverse~: An `Opinionated' Collection of R Packages
+- Each package within the ~tidyverse~ shares common:
+  * design
+  * grammar (syntax)
+  * data structures
+- It is open source, which means you can view---and even contribute to---the code!
+  * GitHub project page: https://github.com/tidyverse
+  * Contributing: https://www.tidyverse.org/contribute/
+- Developed by [[http://hadley.nz/][Hadley Wickham]] & co., with support from RStudio
+- Heavily influenced by concepts taken from relational databases (e.g. Oracle,
+  MySQL).
+
+*** Reading & Writing Data
+- ~readr~
+- ~readxl~
+*** Tidying Data
+- ~tibble~
+- ~tidyr~
+*** General Programming
+- ~magrittr~
+- ~purrr~
+*** Data Wrangling & Cleaning
+- ~dplyr~
+- ~lubridate~
+- ~stringr~
+- ~forcats~
+*** Visualization
+- ~ggplot2~
+\newpage
+** The ~tibble~ Data Frame
+- An alternative, enhanced version of the base R ~data.frame~ class.
+- Selling point: ~tibble~'s `...do less and complain more'
+
+#+caption: A ~tibble~ is made up of variables (columns) and samples (rows).
+#+attr_latex: :placement [H] :align l|l|l|l|l
+#+label: table:tibble
+|     | x_1 | x_2 | ... | x_n |
+|-----+-----+-----+-----+-----|
+| s_1 |     |     |     |     |
+| s_2 |     |     |     |     |
+| ... |     |     |     |     |
+| s_m |     |     |     |     |
+
+- A sample---one row of the ~tibble~ (think observations, cases)---is the set of
+  values that the variables $\{x_1, x_2, ..., x_n\}$ take on for a given
+  instance.
+  * In mathematical terms, a sample is a `tuple'.
+- A set of $n$ samples $\{s_1, s_2, ..., s_n\}$, where each sample $s_i$ is an
+  array/vector/tuple of the variables $\{x_1, x_2, ..., x_n\}$, makes up a
+  ~tibble~.
+- Variables can take on the following types:
+  * ~int~  = integers
+  * ~dbl~  = doubles (double-precision floating point numbers)
+  * ~chr~  = strings (character vectors)
+  * ~lgl~  = logicals (true or false boolean values)
+  * ~fctr~ = factors
+    + These represent categorical variables by encoding each pre-defined string
+      as an integer.
+  * ~date~ = date
+
+-----
+
+- A few advantages:
+  1. Integrates seamlessly with the ~tidyverse~ packages as a type of `tidy'
+     data
+  2. Keeps data in its raw format, rather than coercing data into a specific
+     type or changing variable names without your knowledge.
+     - The base R ~data.frame~ converts your input by default, which can be
+       troublesome if you are not careful. A typical example is the conversion
+       of strings to factors.
+  3. Enhanced print method for large datasets.
+
+-----
+
+- In RStudio, open up ~src/FundamentalsOfTidyverse.R~
+
+\newpage
+** Reading & Writing Data with ~readr~
+- ~readr::read_*()~
+- ~readr::write_*()~
+  
+*** Working with Excel files in the ~readxl~ package
+- https://readxl.tidyverse.org/
+
+\newpage
+** Tidying Data with ~tidyr~
+*** Handling Missing (null) values
+- ~tidyr::drop_na()~
+- ~tidyr::fill()~
+- ~tidyr::replace_na()~
+
+*** Pivots
+- ~tidyr::pivot_longer()~
+- ~tidyr::pivot_wider()~
+
+** ~stringr~
+- Regular expressions (`regex') for defining patterns to search for
+  * Having a basic understanding of regex is incredibly powerful for data
+    wrangling!
+
+\newpage
+** Data Wrangling with ~dplyr~
+*** ~dplyr::mutate()~
+- Creates new variables based on existing ones.
+- ~dplyr::transmutate()~ mutates a variable and transforms the ~tibble~ by
+  dropping existing ones.
+
+:  new_tbl_df <- tbl_df %>% mutate(new_col = x)
+  
+*** ~select()~
+- Select variables (columns) by their name.
+
+: tbl_df %>% select(col1, col2)
+  
+*** ~filter()~
+- Pick out samples (rows) based on their values.
+
+: filter(df, col_name == "x")
+  
+*** ~summarise()~
+- Within a variable (column), collapse values into a single /summary/ by
+  performing an operation on them.
+
+: summarize(new_col_name = operator(col))
+  
+*** ~arrange()~
+- Reorder samples (rows).
+
+:  tbl_df %>% arrange(desc(col))
+
+\newpage
+** Preparing Data for Downstream Analyses
+
+\clearpage
+* Advanced Data Wrangling in R using the ~tidyverse~
+- Open ~src/AdvancedTidyverse.R~ in RStudio.
 
 ** Piping with ~magrittr~
-#+BEGIN_SRC
+#+begin_src R
 f(x)
 x %>% f
-#+END_SRC
+#+end_src
 
-** The ~tibble~ Data Frame
-- Date Frames: `They do less and complain more'
-- Enhanced print method for large datasets
-- Keeps data in its raw format
-
-#+BEGIN_SRC
-tibble(x = 1:5, y = 2, z = x^2 + y)
-#+END_SRC
-
+\newpage
 ** Functional Programming with ~purrr~
-#+BEGIN_SRC
+#+begin_src R
 map()
-#+END_SRC
+#+end_src
 
-* TODO Cleaning Structured Data
-* TODO Choosing a Data Structure
-* TODO Preparing Data for Downstream Analyses
-* TODO Introduction to Julia
+- ~map(array, foo)~
+- ~map(array, function(x) # code here)~
+- ~map(array, ~#code here) # this is a lambda function~
+
+** Data Aggregation
+*** Set Operations
+- Union
+- Intersection
+- Difference
+  
+*** Joins
+- ~joined <- left_join(left_table, right_table, by=c("left_colname" = "right_colname"))~
+
+*** Group Operators
+- ~groupby()~
+- ~summarise()~
+
+\clearpage
+* Introduction to Julia
+- A cross between C, R, Python, and MATLAB.
+- Extremely configurable as a high-level language.
+  * Has the option to directly interface with other languages (C/C++, Fortran,
+    R, Python, Java). Can also be called from R or Python.
+- Designed with speed & efficiency in mind.
+  * Compiled code directly interfaces with the `bare-metal' hardware in a highly
+    optimized manner due to the design of its type system.
+  * Performance rivals that of C.
 - The ability to add explicit type annotations into code improves human
   readability and catches errors upfront, both of which are issues in R.
   * For example, ‘function foo(num::Int)::String’ defines a function ‘foo’ that
     takes an integer ‘num’ and returns a string.
 
-* TODO Practical Assignment
-Within the genomics/omics domain. Ideas:
-- Genome in a Bottle (https://www.nist.gov/programs-projects/genome-bottle)
-- The Cancer Genome Atlas (https://portal.gdc.cancer.gov/)
-- Case vs. control datasets, with patient phenotypes; often very messy, so would
-  be a good candidate for ‘wrangling’ & cleaning.
-- Microbiome analysis (contains taxonomy assignments, sample metadata, etc.)
+** Possible use case, coming from a background in R or Python
+  1. Ingest data with Julia.
+  2. Wrangle in the R ~tidyverse~, or in Julia itself (~DataFrames.jl~).
+  3. Perform resource-intensive operations in Julia.
+  4. Visualize data with R's ~ggplot2~, or directly with packages in Julia
+     (~Gadfly.jl~, ~Plots.jl~).
 
+\newpage
+** The Julia Read-Eval-Print Loop ([[https://docs.julialang.org/en/v1/stdlib/REPL/][REPL]])
+#+caption[short caption]: Julia REPL keybindings
+#+attr_latex: :placement [H] :align l|l
+#+label: table:Julia_REPL_Keybindings
+| Key  | Description                                |
+|------+--------------------------------------------|
+| ~?~  | help                                       |
+| ~^C~ | interrupt/cancel a command                 |
+| ~]~  | package manager (`Pkg mode')               |
+| ~;~  | shell mode^{*}                             |
+| ~^R~ | reverse search through history of commands |
+| ~^S~ | forward search through history of commands |
+\footnotesize
+#+begin_quote
+\s^{*} To use shell mode in Windows, type ~powershell~ or ~cmd~ while in shell
+mode to access shell commands.
+#+end_quote
+\large
+
+** Adding Packages
+1. Enter `Pkg mode' by entering ~]~ into the Julia REPL. This will change the
+   prompt from ~julia>~ to ~(@v1.6) pkg>~.
+2. Add in the following packages by entering the below command into the REPL:
+    #+begin_src julia
+    add DataFrames, StatsBase, Statistics
+    #+end_src
+1. For a complete list of commands, enter ~help~.
+2. To view the current status of packages that are added to your session, enter
+   ~status~.
+
+\newpage
+** Hands-on Code Examples
+- See ~src/IntroToJulia.jl~.
+
+\newpage
+** Julia vs. R vs. Python
+*** Reproducibility
+- Well-designed package manager.
+- Effortlessly recreate package environments, with the ability to /pin/ packages
+  in a given state.
+- Pre-built binaries available for numerous platforms. It just works.
+
+*** Performance
+- As R is an interpreted language, control flow---like that of ~if~ statements
+  and loops (~for~, ~while~)---is slow in comparison to compiled languages (C,
+  Java).
+- To speed up operations in R:
+  * Pre-allocate memory for data structures before filling them up in a loop.
+  * Make use of *vectorized* operations that---under the hood---are implemented
+    in C:
+    #+begin_src R
+      a <- 1:5 # what if 5 were 1e9? Try it!
+      b <- 1:5
+
+      # Non-vectorized operation (slow)
+      result1 <- numeric(length = length(a))
+      for (i in seq_along(a)) {
+          result1[i] <- a[i] + b[i]
+      }
+      result1 # print output
+
+      # Vectorized operation (fast)
+      result2 <- a + b
+      result2 # print output
+    #+end_src
+  * Make use of the ~apply~ family of functions: ~lapply()~, ~sapply()~,
+    ~vapply()~
+    #+begin_src R
+      df <- tibble(x=1:10, y=100:90)
+      apply(X=df, MARGIN=2, FUN=mean) # MARGIN=1 operates on rows; 2 operates on columns
+    #+end_src
+
+\newpage
+*** Object-Oriented Programming vs. Multiple Dispatch 
+- Methods are owned by functions and not by objects
+  * /Here, a method is an instance of a function./
+
+#+begin_src 
+Square.getArea(); # typical OOP paradigm
+
+function area(x) = 2
+function area(x::Square) = 2 * 2
+#+end_src
+
+\newpage
+*** Julia is a Fast, Dynamically-Typed Language
+- A *statically* typed language---like that of C or Java---requires the type of
+  a variable to be known at compile-time.
+  * Offers large increases in /performance/, as the compiled code can be heavily
+    optimized when types are explicitly known prior to run-time.
+- A *dynamically* typed language---like that of R---checks for types at run-time
+  and are often interpreted languages (no compilation required).
+  * Benefit: much more forgiving for programmers in terms of frequency of errors
+    encountered, with the cost being a reduction in performance.
+
+-----
+
+- Julia is dynamically typed, but incredibly fast because of how its type system
+  was designed to be stable. This allows for its compiled code to be heavily
+  optimized.
+  * Benchmarks for Julia: https://julialang.org/benchmarks/
+- Take a look at the Julia codebase: https://github.com/JuliaLang/julia
+  * Generic functions make extending its codebase a simple task, yet highly
+    effective.
+
+\newpage
+** IJulia: Running Julia in a Jupyter Environment
+- https://github.com/JuliaLang/IJulia.jl
+- In the package mode (enter ~]~), enter the following:
+  #+begin_src julia
+  add IJulia
+  #+end_src
+- Then, exit the package mode. Initiate the package for use:
+  #+begin_src julia
+    using IJulia
+    notebook()
+  #+end_src
+
+\clearpage
+* Practical Assignment
+** Wrangle Gene Location Data in R
+#+caption: Overview of microarray gene expression experiments cite:babu2004introduction.
+#+attr_latex: :placement [H]
+#+label: fig:MicroarrayGeneExpressionOverview
+[[file:~/bbme/MiCM_DataWranglingWorkshop_2021/figs/MicroarrayGeneExpressionExperiments.png]]
+
+- Obtain chromosome 9 gene locations (gene name, chr, txStart, txEnd).
+- UCSC file contains gene locations (transcription start and transcription end
+  sites)
+
+\newpage
+** Task 2: Parse & Sort Sequencing Data with Types in Julia       :noexport:
+- The FASTA file format (~*.fasta~, ~*.fa~): represents raw sequencing data
+  (nucleuotides, amino acids) in plain text files. May include quality scores
+  generated by the sequencing machine for each `base call'.
+  * Basic format:
+   #+begin_verse
+   >sequence1
+   AAA
+   >sequence2
+   CCC
+   #+end_verse 
+- A mystery nucleotide sequence file is provided here: ~data/mystery.fa~.
+
+\clearpage
 * Resources
-** General
-- https://en.wikipedia.org/wiki/Data_wrangling
-- OOP vs. multiple dispatch: methods are owned by functions and not by objects
-
 ** R
-- https://r4ds.had.co.nz/tidy-data.html
-- https://en.wikipedia.org/wiki/R_(programming_language)
-- https://r-pkgs.org/
-- http://adv-r.had.co.nz/Introduction.html
-- https://github.com/GreenwoodLab/knitr-tutorial
-- https://swcarpentry.github.io/r-novice-inflammation/15-supp-loops-in-depth/
+- R for Data Science: https://r4ds.had.co.nz/index.html
+  * Specifically: [[https://r4ds.had.co.nz/tidy-data.html][Tidy data]] and [[https://r4ds.had.co.nz/relational-data.html][Relational data]]
+- Advanced R, by Hadley Wickham: http://adv-r.had.co.nz/Introduction.html
+- Literate programming in R using ~knitr~:
+  * https://github.com/GreenwoodLab/knitr-tutorial
 
-** Docker
+** Docker                                                         :noexport:
 - https://www.rocker-project.org/
 - https://environments.rstudio.com/docker
 - For code: ~RUN git clone gitURLorSSH~
 
-** Polling Software
+** Polling Software                                               :noexport:
 - TurningPoint: https://www.mcgill.ca/polling/
 
 ** Common Errors
@@ -182,3 +583,7 @@ download & install a stable version of [[https://www.xquartz.org/][XQuartz]] and
 Alternatively, if you use [[https://brew.sh/][Homebrew]] as your package manager, you can run the
 following from a terminal:
 : brew install --cask xquartz
+
+\phantomsection
+bibliographystyle:abbrvnat
+bibliography:~/bibliography/Mendeley/library.bib
