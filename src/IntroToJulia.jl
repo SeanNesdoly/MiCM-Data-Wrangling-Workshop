@@ -1,8 +1,9 @@
 using DataFrames
-using CategoricalArrays
 using StatsBase
 using Statistics
-using DataStructures
+
+# Optional: CategoricalArrays
+# using CategoricalArrays
 
 # Optional: Embedded R within Julia
 # using RCall
