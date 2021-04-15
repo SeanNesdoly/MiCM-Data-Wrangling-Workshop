@@ -66,3 +66,39 @@ t <- tibble(x = 1:10,
 
 print(t, n = 3)
 View(t)
+
+#-------------------------------------------------------------------------------
+# readr: Read & Write Data
+#-------------------------------------------------------------------------------
+# Read files with Comma Separated Values (*.csv)
+readr::read_csv("./data/in1.csv",
+                col_names = FALSE)
+
+# Read files with Tab Separated Values (*.tsv)
+readr::read_tsv("./data/in1.tsv",
+                col_names = FALSE)
+
+# Read in a file, replacing specified values with 'NA'
+readr::read_csv("./data/in1.csv",
+                col_names = FALSE,
+                na = c("FALSE"))
+
+# Read files with any delimiter
+file_in1_tsv <- readr::read_delim("./data/in1.tsv",
+                                  delim = "\t",
+                                  col_names = FALSE)
+file_in1_tsv
+
+# Write file as Comma Separated Values (*.csv), with header (by default)
+readr::write_csv(file_in1_tsv,
+                 "./out/out1.csv")
+
+# Write file as Tab Separated Values (*.tsv), without header
+readr::write_tsv(file_in1_tsv,
+                 "./out/out1.tsv",
+                 col_names = FALSE)
+
+# Write files with any delimiter
+readr::write_delim(file_in1_tsv,
+                   "./out/out1.txt",
+                   delim = "\n")
