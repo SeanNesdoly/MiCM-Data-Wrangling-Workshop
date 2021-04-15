@@ -102,3 +102,30 @@ readr::write_tsv(file_in1_tsv,
 readr::write_delim(file_in1_tsv,
                    "./out/out1.txt",
                    delim = "\n")
+
+
+#-------------------------------------------------------------------------------
+# dplyr: The Core of Data Wrangling
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+# lubridate: Dates & Time
+#-------------------------------------------------------------------------------
+# Try Sys.timezone() if 'tz' parameter is not recognized
+tz1 <- lubridate::ymd_hms("2021-03-26 23:00:30", tz = "America/Montreal")
+tz1
+lubridate::with_tz(tz1, "America/Vancouver")
+
+times <- c("2021.02.05 14:52:29", "19820924090000")
+lubridate::ymd_hms(times)
+lubridate::ymd_hms(times, tz = "America/Montreal")
+
+#-------------------------------------------------------------------------------
+# Preparing Data for Downstream Analyses
+#-------------------------------------------------------------------------------
+# Append timestamps to your ouput
+time <- function() {
+  gsub('-', '', Sys.time()) %>% gsub('\\s+', '-', .) %>% gsub(':', '', .)
+}
+
+time() # append to output filenames, plots
